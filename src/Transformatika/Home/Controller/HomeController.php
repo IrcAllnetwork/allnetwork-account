@@ -3,7 +3,6 @@ namespace Transformatika\Home\Controller;
 
 use Transformatika\MVC\Controller;
 use Zend\Session\Container;
-use Zend\Diactoros\Response\RedirectResponse;
 
 class HomeController extends Controller
 {
@@ -14,7 +13,8 @@ class HomeController extends Controller
         parent::__construct();
         $user = new Container('user');
         if ($user->id) {
-            new RedirectResponse(BASE_URL.'my-account');
+            header('location:'.BASE_URL.'my-account');
+            exit();
         }
     }
 
