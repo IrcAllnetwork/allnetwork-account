@@ -1,0 +1,48 @@
+{% include "Shared/Header.twig" %}
+<div class="ui three column stackable grid container" style="margin-top:40px;">
+    <div class="column"></div>
+    <div class="column">
+        <div style="text-align:center">
+            <img src="{{records.avatar}}" onerror="this.src='/img/ninja.png'" class="ui small rounded image account-avatar" style="margin:0 auto;"/>
+        </div>
+        <h3 class="ui center aligned header">
+            {{records.userName}}
+            <div class="sub header">
+                {{records.email}}
+            </div>
+        </h3>
+        <div class="ui middle aligned relaxed list">
+            <div class="item">
+                <i class="ui blue circular inverted trophy icon"></i>
+                <div class="content">
+                    <strong>{{records.type | upper}}</strong> Account
+                </div>
+            </div>
+            <div class="item">
+                <i class="ui green circular inverted checked calendar icon"></i>
+                <div class="content">
+                    Member since <span class="datetime-format">{{records.registerDate}}</span>
+                </div>
+            </div>
+
+            <div class="item">
+                <i class="ui red circular inverted payment icon"></i>
+                <div class="content">
+                    <p>Balance: <strong>IDR {{records.totalCredit}}</strong></p>
+                </div>
+            </div>
+        </div>
+        <div style="text-align:center;margin-top:40px;">
+            <a href="/my-account/settings" class="ui orange button">Settings</a>
+            <a href="/signout" class="ui primary button">Sign Out</a>
+        </div>
+    </div>
+    <div class="column">
+    </div>
+</div>
+<script type="text/javascript">
+    $('img.account-avatar').on('error', function() {
+        $(this).attr('src', '/img/ninja.png');
+    });
+</script>
+{% include "Shared/Footer.twig" %}

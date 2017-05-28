@@ -1,0 +1,26 @@
+{% include "Shared/Header.twig" %}
+<div class="ui three column stackable grid container" style="margin-top:40px;">
+    <div class="column"></div>
+    <div class="column">
+        <form class="ui form" action="/authorize-request?client_id={{records.client_id}}&response_type=code&state=authorize&ref={{refPath}}" method="POST">
+            <div style="text-align:center;">
+                <h2 class="ui header">
+                    AllNetwork Web
+                    <div class="sub header">ID: {{records.client_id}}</div>
+                </h2>
+                <p>Requested permission to access your profile</p>
+                <input type="hidden" name="hash" value="{{hash}}"/>
+                <input type="hidden" name="authorize" value="y"/>
+                <button class="ui primary button">Authorize App</button>
+            </div>
+        </form>
+    </div>
+    <div class="column">
+    </div>
+</div>
+<script type="text/javascript">
+    $('img.account-avatar').on('error', function() {
+        $(this).attr('src', '/img/ninja.png');
+    });
+</script>
+{% include "Shared/Footer.twig" %}

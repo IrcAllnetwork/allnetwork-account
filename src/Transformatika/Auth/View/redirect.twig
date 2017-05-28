@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Thanks for using AllNetworkID</title>
+        <script type="text/javascript">
+            //window.onunload = refreshParent;
+            function refreshParent() {
+                var hash = '{{hash}}';
+                window.opener.location.href='{{ref}}';
+                if (hash.length > 0) {
+                    window.opener.reload();
+                }
+                console.log(window.opener);
+            }
+            setTimeout(function(){
+                var w = window.self;
+                w.close();
+            }, 1000);
+        </script>
+    </head>
+    <body onload="refreshParent()">
+        {{data.code}}
+    </body>
+</html>

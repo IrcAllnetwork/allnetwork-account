@@ -1,0 +1,4 @@
+/vendor/*
+/generated-migrations/*
+/storage/*
+/public/bower_components/*

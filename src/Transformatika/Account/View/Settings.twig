@@ -1,0 +1,65 @@
+{% include "Shared/Header.twig" %}
+<div class="ui three column stackable grid container" style="margin-top:10px;margin-bottom:40px;">
+    <div class="spacer computer only column"></div>
+    <div class="column">
+        <div class="ui image header">
+            <img src="{{records.avatar}}" onerror="this.src='/img/ninja.png'" class="ui small rounded image account-avatar" style="margin:0 auto;"/>
+            <div class="content">
+                {{records.userName}}
+                <div class="sub header">
+                    {{records.email}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="spacer computer only column"></div>
+</div>
+
+<div class="ui five column stackable grid container">
+    <div class="column">
+        <a href="" class="ui center aligned icon header">
+            <i class="ui grey user icon"></i>
+            Profile
+            <div class="sub header">
+                Profile Picture, Password, Profile Data
+            </div>
+        </a>
+    </div>
+    <div class="column">
+        <a href="" class="ui center aligned icon header">
+            <i class="ui grey cube icon"></i>
+            Applications
+            <div class="sub header">
+                Register new Apps, Manage API Key
+            </div>
+        </a>
+    </div>
+    <div class="column">
+        <a href="" class="ui center aligned icon header">
+            <i class="ui grey male icon"></i>
+            Privacy
+            <div class="sub header">
+                Privacy Settings
+            </div>
+        </a>
+    </div>
+    <div class="column">
+        <a href="" class="ui center aligned icon header">
+            <i class="ui grey money icon"></i>
+            Credit / Debit
+            <div class="sub header">
+                Credit and Debit Transaction
+            </div>
+        </a>
+    </div>
+    <div class="column">
+        <a href="" class="ui center aligned icon header">
+            <i class="ui grey shopping bag icon"></i>
+            Transaction
+            <div class="sub header">
+                Order / Transaction History
+            </div>
+        </a>
+    </div>
+</div>
+{% include "Shared/Footer.twig" %}

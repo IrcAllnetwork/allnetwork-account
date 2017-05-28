@@ -1,0 +1,211 @@
+{% include "Shared/Header.twig" %}
+<div id="home-container">
+    <div id="login">
+        <div class="header">
+            <img id="header-logo" src="/img/ANET.jpg" title="AllNetwork Account" style="width: 140px;height: auto;"/>
+            <!-- <h2 id="header-title">allnetwork</h2> -->
+        </div>
+        <div class="content">
+            <div class="menu">
+                <div class="ui buttons">
+                    <button class="ui grey basic active button switch" data-target="signin">Sign In</button>
+                    <button class="ui grey basic button switch" data-target="signup">Sign Up</button>
+                </div>
+            </div>
+            <div class="form" id="signin-form">
+                <div class="ui small fluid left icon input">
+                    <i class="user icon"></i>
+                    <input id="signin-email" type="text" placeholder="NickName" />
+                </div>
+                <div class="ui small fluid left icon input">
+                    <i class="lock icon"></i>
+                    <input id="signin-password" type="password" placeholder="Password" />
+                </div>
+            </div>
+            <div class="form" id="signup-form" style="display:none;">
+                <div class="ui small fluid left icon input">
+                    <i class="mail icon"></i>
+                    <input id="signup-email" disabled type="text" placeholder="Email Address" />
+                </div>
+                <label class="ui red label">Temporary disabled. Please register on IRC</label>
+            </div>
+            <div class="forgot password">
+                <a href="">Forgot password?</a>
+            </div>
+        </div>
+        <div class="actions" style="background:#FD3700;">
+            <button id="action-btn" data-target="signin">Sign In</button>
+        </div>
+    </div>
+    <div class="footnote" style="text-align:right;">
+        &copy; 2017 AllNetwork
+        <div>
+            <small>Photo by: <a style="color:#FD3700" target="_blank" href="https://unsplash.com/@apu889">Harman Abiwardani</a></small>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var _switchArea = function(e){
+        e.preventDefault();
+        var el = $(e.target);
+        var id = el.data('target');
+
+        $('.switch').removeClass('active');
+        el.addClass('active');
+
+        $('.form').hide();
+        $('#'+id+'-form').show();
+
+        if (id === 'signin') {
+            $('#action-btn').text('Sign In').data('target', 'signin');
+        } else {
+            $('#action-btn').text('Sign Up').data('target', 'signup');
+        }
+    };
+
+    var getBaseURL = function() {
+        var pathparts = location.pathname.split('/');
+        if (location.host == 'localhost') {
+            var url = location.origin+'/'+pathparts[1].trim('/')+'/';
+        }else{
+            var url = location.origin;
+        }
+        return url;
+    }
+
+    var BASE_URL = getBaseURL();
+
+    var getUrlVars = function() {
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+        function(m,key,value) {
+          vars[key] = value;
+        });
+        if (!vars['ref']) {
+            vars['ref'] = '';
+        }
+        return vars;
+    }
+
+    var _handleSubmit = function(e){
+        var el = $(e.target);
+        var target = el.data('target');
+        var email, password;
+        if (target === 'signin') {
+            email = $('#signin-email').val();
+            password = $('#signin-password').val();
+            if (email.length > 0 && password.length > 0) {
+                $.ajax({
+                    type: 'post',
+                    url: BASE_URL+'/signin',
+                    data:{
+                        nick: email,
+                        password: password,
+                        ref: getUrlVars()['ref'],
+                        refPath: document.referrer
+                    },
+                    responseType: 'json',
+                    beforeSend: function(){
+                        $('#loading').addClass('active');
+                    },
+                    success: function(res) {
+                        $('#loading').removeClass('active');
+                        if (!res.hasOwnProperty('error')) {
+                            $.growl.error({
+                                message: res
+                            });
+                        } else {
+                            if (res.error && res.error.length > 0) {
+                                $.growl.error({
+                                    message: res.error
+                                });
+                            } else {
+                                if (document.referrer !== '' && res.records.ref !== '') {
+                                    window.location.href = decodeURIComponent(res.records.ref)+'&refPath='+res.records.refPath;
+                                } else {
+                                    window.location.href = BASE_URL+'/my-account';
+                                }
+                            }
+                        }
+
+                    }
+                });
+            }
+        } else {
+            //email = $('#signup-email').val();
+            email = '';
+            if (email.length > 0) {
+                $.ajax({
+                    url: BASE_URL+'/signup',
+                    type: 'post',
+                    data: {
+                        email: email,
+                        ref: getUrlVars()['ref'],
+                        refPath: document.referrer
+                    },
+                    beforeSend: function(){
+                        $('#loading').addClass('active');
+                    },
+                    success: function(res){
+                        $('#loading').removeClass('active');
+                        if (res.error) {
+                            $.growl.error({
+                                message: res.msg
+                            });
+                        } else {
+                            $.growl.notice({
+                                message: res.msg
+                            });
+                        }
+                    }
+                });
+            }
+        }
+    };
+
+    var degree = 0;
+    var spin = null;
+    function rotate(){
+        var img = $('#header-logo');
+        if (degree > 360) {
+            clearTimeout(spin);
+            return false;
+        }
+        degree += 10;
+        img.css({
+            '-webkit-transform': 'rotate('+degree+'deg)',
+            transform: 'rotate('+degree+'deg)'
+        });
+        spin = setTimeout(function(){
+            rotate();
+        }, 5);
+    }
+    $(document).ready(function(){
+        var loginHeight = $('#login').height();
+        $('#login').css({
+            marginTop: -(loginHeight/2)
+        });
+        $('.switch').bind('click', _switchArea);
+
+        $('#action-btn').bind('click', _handleSubmit);
+        $('#signin-password').bind('keyup', function(e){
+            if (e.keyCode === 13) {
+                $('#action-btn').trigger('click');
+            }
+        });
+        $('#signup-email').bind('keyup', function(e){
+            if (e.keyCode === 13) {
+                $('#action-btn').trigger('click');
+            }
+        });
+        // setTimeout(function(){
+        //     rotate();
+        // }, 1000);
+    });
+
+    $('window').on('unload', function(){
+        $('.switch').unbind('click', _switchArea);
+        $('#action-btn').unbind('click', _handleSubmit);
+    });
+</script>
+{% include "Shared/Footer.twig" %}

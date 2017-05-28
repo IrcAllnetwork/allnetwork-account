@@ -1,0 +1,17 @@
+<script type="text/javascript">
+    $('.date-format').each(function(){
+        var date = $(this).text();
+        $(this).text(moment(date).format('ll'));
+    });
+    $('.datetime-format').each(function(){
+        var date = $(this).text();
+        $(this).text(moment(date).format('lll'));
+    });
+    $(document).ready(function(){
+        setTimeout(function(){
+            $('#loading').removeClass('active');
+        }, 0);
+    });
+</script>
+</body>
+</html>
