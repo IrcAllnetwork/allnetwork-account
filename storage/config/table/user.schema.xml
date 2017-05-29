@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database package="transformatika" defaultIdMethod="native" defaultPhpNamingMethod="underscore" name="default" namespace="Propel\Table\Account">
+    <table idMethod="native" name="t_account" phpName="Account">
+        <column name="account_id" phpName="Id" primaryKey="true" required="true" size="32" type="CHAR"/>
+        <column name="account_username" phpName="UserName" type="VARCHAR" size="64"/>
+        <column name="account_firstname" phpName="FirstName" size="255" type="VARCHAR"/>
+        <column name="account_lastname" phpName="LastName" size="255" type="VARCHAR"/>
+        <column name="account_password" phpName="Password" size="255" type="VARCHAR"/>
+        <column defaultValue="p" name="account_status" phpName="Status" required="true" size="1" type="VARCHAR"/>
+        <column name="account_email" phpName="Email" required="true" size="255" type="VARCHAR"/>
+        <column name="account_registerdate" phpName="RegisterDate" type="TIMESTAMP"/>
+        <column name="account_expired" phpName="Expired" type="DATE"/>
+        <column name="account_avatar" phpName="Avatar" type="CLOB"/>
+        <column name="account_token" phpName="Token" size="255" type="VARCHAR"/>
+        <column name="account_ipaddress" phpName="IPAddress" size="128" type="VARCHAR"/>
+        <column name="account_type" phpName="Type" defaultValue="free" size="64" type="VARCHAR"/>
+        <column name="account_credit" phpName="TotalCredit" defaultValue="0" type="DECIMAL"/>
+        <column name="account_debit" phpName="TotalDebit" defaultValue="0" type="DECIMAL"/>
+        <column name="account_key" phpName="Key" type="VARCHAR" size="64"/>
+        <column name="account_dev" phpName="Developer" type="VARCHAR" size="1" defaultValue="n"/>
+        <behavior name="query_cache" />
+        <behavior id="behavior_account_debit" name="aggregate_column">
+            <parameter name="name" value="account_debit" />
+            <parameter name="foreign_table" value="t_debit" />
+            <parameter name="expression" value="SUM(debit_value)" />
+        </behavior>
+        <behavior id="behavior_account_credit" name="aggregate_column">
+            <parameter name="name" value="account_credit" />
+            <parameter name="foreign_table" value="t_credit" />
+            <parameter name="expression" value="SUM(credit_value)" />
+        </behavior>
+    </table>
+    <table idMethod="native" name="t_credit" phpName="Credit">
+        <column name="credit_id" phpName="Id" primaryKey="true" required="true" size="32" type="CHAR"/>
+        <column name="credit_account" phpName="AccountId" required="true" size="32" type="CHAR"/>
+        <column name="credit_value" phpName="Value" required="true" defaultValue="0" type="DECIMAL"/>
+        <column name="credit_time" phpName="Time" type="TIMESTAMP"/>
+        <column name="credit_transaction" phpName="TransactionId" required="true" size="32" type="CHAR"/>
+        <foreign-key foreignTable="t_account" name="fk_tcredit_taccount">
+            <reference local="credit_account" foreign="account_id"/>
+        </foreign-key>
+        <foreign-key foreignTable="t_transaction" name="fk_tcredit_ttransaction">
+            <reference local="credit_transaction" foreign="transaction_id"/>
+        </foreign-key>
+        <index name="idx_tcredit_taccount">
+            <index-column name="credit_account"/>
+        </index>
+        <index name="idx_tcredit_ttransaction">
+            <index-column name="credit_transaction"/>
+        </index>
+    </table>
+    <table idMethod="native" name="t_debit" phpName="Debit">
+        <column name="debit_id" phpName="Id" primaryKey="true" required="true" size="32" type="CHAR"/>
+        <column name="debit_account" phpName="AccountId" required="true" size="32" type="CHAR"/>
+        <column name="debit_value" phpName="Value" required="true" defaultValue="0" type="DECIMAL"/>
+        <column name="debit_time" phpName="Time" type="TIMESTAMP"/>
+        <column name="debit_transaction" phpName="TransactionId" required="true" size="32" type="CHAR"/>
+        <foreign-key foreignTable="t_account" name="fk_tdebit_taccount">
+            <reference local="debit_account" foreign="account_id"/>
+        </foreign-key>
+        <foreign-key foreignTable="t_transaction" name="fk_tdebit_ttransaction">
+            <reference local="debit_transaction" foreign="transaction_id"/>
+        </foreign-key>
+        <index name="idx_tdebit_taccount">
+            <index-column name="debit_account"/>
+        </index>
+        <index name="idx_tdebit_ttransaction">
+            <index-column name="debit_transaction"/>
+        </index>
+    </table>
+    <table idMethod="native" name="t_transaction" phpName="Transaction">
+        <column name="transaction_id" phpName="Id" primaryKey="true" required="true" size="32" type="CHAR"/>
+        <column name="transaction_account" phpName="AccountId" size="32" required="true" type="CHAR"/>
+        <column name="transaction_time"  phpName="Time" type="TIMESTAMP"/>
+        <column name="transaction_type" phpName="Type" defaultValue="debit" type="VARCHAR" size="12"/>
+        <column name="transaction_totalvalue" phpName="TotalValue" defaultValue="0" type="INTEGER"/>
+        <column name="transaction_totalqty" phpName="TotalQuantity" defaultValue="0" type="INTEGER"/>
+        <behavior id="behavior_total_value" name="aggregate_column">
+            <parameter name="name" value="transaction_totalvalue" />
+            <parameter name="foreign_table" value="t_transactiondetail" />
+            <parameter name="expression" value="SUM(transactiondetail_value)" />
+        </behavior>
+        <behavior id="behavior_total_qty" name="aggregate_column">
+            <parameter name="name" value="transaction_totalqty" />
+            <parameter name="foreign_table" value="t_transactiondetail" />
+            <parameter name="expression" value="SUM(transactiondetail_qty)" />
+        </behavior>
+        <foreign-key foreignTable="t_account" name="fk_ttransaction_taccount">
+            <reference local="transaction_account" foreign="account_id"/>
+        </foreign-key>
+        <index name="idx_ttransaction_taccount">
+            <index-column name="transaction_account"/>
+        </index>
+    </table>
+    <table idMethod="native" name="t_transactiondetail" phpName="TransactionDetail">
+        <column name="transactiondetail_id" phpName="Id" primaryKey="true" required="true" size="32" type="CHAR"/>
+        <column name="transactiondetail_transaction" phpName="TransactionId" required="true" size="32" type="CHAR"/>
+        <column name="transactiondetail_type" phpName="Type" defaultValue="purchase" size="64" type="VARCHAR"/>
+        <column name="transactiondetail_description" phpName="Description" size="255" type="VARCHAR"/>
+        <column name="transactiondetail_qty" phpName="Quantity" defaultValue="1" type="INTEGER"/>
+        <column name="transactiondetail_price" phpName="Price" defaultValue="0" type="DECIMAL"/>
+        <column name="transactiondetail_value" phpName="Value" defaultValue="0" type="DECIMAL"/>
+        <column name="transactiondetail_discount" phpName="Discount" defaultValue="0" type="DECIMAL"/>
+        <column name="transactiondetail_product" phpName="ProductId" type="CHAR" size="32"/>
+        <column name="transactiondetail_productname" phpName="ProductName" type="VARCHAR" size="255"/>
+        <foreign-key foreignTable="t_transaction" onDelete="cascade" name="fk_ttransactiondetail_ttransaction">
+            <reference local="transactiondetail_transaction" foreign="transaction_id" />
+        </foreign-key>
+        <foreign-key foreignTable="t_product" name="fk_ttransactiondetail_tproduct">
+            <reference local="transactiondetail_product" foreign="product_id" />
+        </foreign-key>
+        <index name="idx_ttransactiondetail_ttransaction">
+            <index-column name="transactiondetail_transaction"/>
+        </index>
+        <index name="idx_ttransactiondetail_tproduct">
+            <index-column name="transactiondetail_product"/>
+        </index>
+    </table>
+    <table idMethod="native" name="t_product" phpName="Product">
+        <column name="product_id" phpName="Id" primaryKey="true" required="true" size="32" type="CHAR"/>
+        <column name="product_name" phpName="Name" required="true" size="128" type="VARCHAR"/>
+        <column name="product_owner" phpName="Owner" required="true" size="32" type="CHAR"/>
+        <column name="product_price" phpName="Price" defaultValue="0" type="DECIMAL"/>
+        <column name="product_discount" phpName="Discount" defaultValue="0" type="DECIMAL"/>
+        <column name="product_status" phpName="Status" type="VARCHAR" size="1" defaultValue="p"/>
+        <column name="product_repository" phpName="Repository" type="CLOB"/>
+        <column name="product_license" phpName="License" type="VARCHAR" size="128" defaultValue="GPLv3"/>
+        <column name="product_description" phpName="Description" type="CLOB"/>
+        <column name="product_totalreview" phpName="TotalReview" type="INTEGER" defaultValue="0"/>
+        <column name="product_rating" phpName="Rating" type="INTEGER" defaultValue="0"/>
+        <column name="product_type" phpName="Type" type="VARCHAR" defaultValue="app" size="24"/>
+        <behavior name="query_cache" />
+        <behavior id="behavior_product_totalreview" name="aggregate_column">
+            <parameter name="name" value="product_totalreview" />
+            <parameter name="foreign_table" value="t_productreview" />
+            <parameter name="expression" value="COUNT(productreview_id)" />
+        </behavior>
+        <behavior id="behavior_product_rating" name="aggregate_column">
+            <parameter name="name" value="product_rating" />
+            <parameter name="foreign_table" value="t_productreview" />
+            <parameter name="expression" value="AVG(productreview_rate)" />
+        </behavior>
+        <foreign-key foreignTable="t_account" name="fk_tproduct_taccount">
+            <reference local="product_owner" foreign="account_id"/>
+        </foreign-key>
+        <index name="idx_tproduct_taccount">
+            <index-column name="product_owner"/>
+        </index>
+    </table>
+    <table idMethod="native" name="t_productreview" phpName="ProductReview">
+        <column name="productreview_id" phpName="Id" primaryKey="true" required="true" size="32" type="CHAR"/>
+        <column name="productreview_account" phpName="AccountId" required="true" size="32" type="CHAR"/>
+        <column name="productreview_rate" phpName="Rate" required="true" type="INTEGER"/>
+        <column name="productreview_detail" phpName="Detail" required="true" type="CLOB"/>
+        <column name="productreview_product" phpName="ProductId" required="true" type="CHAR" size="32"/>
+        <foreign-key foreignTable="t_account" name="fk_tproductreview_taccount">
+            <reference local="productreview_account" foreign="account_id"/>
+        </foreign-key>
+        <foreign-key foreignTable="t_product">
+            <reference local="productreview_product" foreign="product_id"/>
+        </foreign-key>
+        <index name="idx_tprodcutreview_taccount">
+            <index-column name="productreview_account"/>
+        </index>
+        <index name="idx_tproductreview_tproduct">
+            <index-column name="productreview_product"/>
+        </index>
+    </table>
+    <table idMethod="native" name="t_productimage" phpName="ProductImage">
+        <column name="productimage_id" phpName="Id" primaryKey="true" required="true" size="32" type="CHAR"/>
+        <column name="productimage_product" phpName="ProductId" required="true" size="32" type="CHAR"/>
+        <column name="productimage_image" phpName="Image" required="true" type="CLOB"/>
+        <column name="productimage_title" phpName="Title" type="VARCHAR" size="255"/>
+        <foreign-key foreignTable="t_product" name="fk_tproductimage_tproduct">
+            <reference local="productimage_product" foreign="product_id"/>
+        </foreign-key>
+        <index name="idx_tproductimage_tproduct">
+            <index-column name="productimage_product"/>
+        </index>
+    </table>
+    <table idMethod="native" name="t_producttaglist" phpName="ProductTagList">
+        <column name="producttaglist_id" phpName="Id" primaryKey="true" required="true" size="32" type="CHAR"/>
+        <column name="producttaglist_name" phpName="Name" required="true" size="128" type="VARCHAR"/>
+        <column name="producttaglist_totalproduct" phpName="TotalProduct"/>
+        <behavior id="behavior_productaglist_total" name="aggregate_column">
+            <parameter name="name" value="producttaglist_totalproduct" />
+            <parameter name="foreign_table" value="t_producttag" />
+            <parameter name="expression" value="COUNT(producttag_tag)" />
+        </behavior>
+    </table>
+    <table idMethod="native" name="t_producttag" phpName="ProductTag">
+        <column name="producttag_product" phpName="ProductId" type="CHAR" size="32" required="true"/>
+        <column name="producttag_tag" phpName="ProductTagListId" type="CHAR" size="32" required="true"/>
+        <foreign-key foreignTable="t_product" name="fk_tproducttag_tproduct">
+            <reference local="producttag_product" foreign="product_id"/>
+        </foreign-key>
+        <foreign-key foreignTable="t_producttaglist" name="fk_tproducttag_tproducttaglis">
+            <reference local="producttag_tag" foreign="producttaglist_id"/>
+        </foreign-key>
+        <index name="idx_tproducttag_tproduct">
+            <index-column name="producttag_product"/>
+        </index>
+        <index name="idx_tproducttag_tproducttaglist">
+            <index-column name="producttag_tag"/>
+        </index>
+    </table>
+</database>

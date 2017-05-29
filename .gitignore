@@ -1,4 +1,7 @@
 /vendor/*
 /generated-migrations/*
-/storage/*
+/storage/config/database.yaml
+/storage/config/app.yaml
+/storage/config/rbac.yaml
+/storage/cache/*
 /public/bower_components/*

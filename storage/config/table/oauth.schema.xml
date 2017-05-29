@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database package="oauth" defaultIdMethod="native" defaultPhpNamingMethod="underscore" name="default" namespace="Propel\Table\Oauth">
+    <table name="oauth_access_tokens" idMethod="native" phpName="AccessTokens">
+      <column name="access_token" phpName="AccessToken" type="VARCHAR" size="40" required="true" primaryKey="true"/>
+      <column name="client_id" phpName="ClientId" type="CHAR" size="32"/>
+      <column name="user_id" phpName="UserId" type="CHAR" size="32"/>
+      <column name="expires" phpName="Expires" type="TIMESTAMP"/>
+      <column name="scope" phpName="Scope" type="VARCHAR" size="2000"/>
+  </table>
+  <table name="oauth_authorization_codes" idMethod="native" phpName="AuthorizationCode">
+      <column name="authorization_code" phpName="AuthorizationCode" type="VARCHAR" size="40" required="true" primaryKey="true"/>
+      <column name="client_id" phpName="ClientId" type="CHAR" size="32"/>
+      <column name="redirect_uri" phpName="RedirectURI" type="VARCHAR" size="2000"/>
+      <column name="user_id" phpName="UserId" type="CHAR" size="32"/>
+      <column name="expires" phpName="Expires" type="TIMESTAMP"/>
+      <column name="scope" phpName="Scope" type="VARCHAR" size="2000"/>
+  </table>
+  <table name="oauth_clients" idMethod="native" phpName="Clients">
+      <column name="client_id" phpName="ClientId" type="CHAR" size="32" required="true" primarykey="true"/>
+      <column name="client_secret" phpName="ClientSecret" type="VARCHAR" size="80"/>
+      <column name="redirect_uri" phpName="RedirectURI" type="VARCHAR" size="2000"/>
+      <column name="grant_types" phpName="GrantTypes" type="VARCHAR" size="80"/>
+      <column name="user_id" phpName="UserId" type="CHAR" size="32"/>
+      <column name="scope" phpName="Scope" type="VARCHAR" size="2000"/>
+      <column name="client_name" phpName="Name" type="VARCHAR" size="255"/>
+      <column name="client_icon" phpName="Icon" type="LONGVARCHAR"/>
+  </table>
+  <table name="oauth_jwt" idMethod="native" phpName="JWT">
+      <column name="client_id" phpName="ClientId" type="CHAR" size="32" required="true" primarykey="true"/>
+      <column name="subject" phpName="Subject" type="VARCHAR" size="80"/>
+      <column name="public_key" phpName="PublicKey" type="VARCHAR" size="2000"/>
+  </table>
+  <table name="oauth_refresh_tokens" idMethod="native" phpName="RefreshToken">
+      <column name="refresh_token" phpName="RefreshTokens" type="VARCHAR" size="80" required="true" primarykey="true"/>
+      <column name="client_id" phpName="ClientId" type="CHAR" size="32"/>
+      <column name="user_id" phpName="UserId" type="CHAR" size="32"/>
+      <column name="expires" phpName="Expires" type="TIMESTAMP"/>
+      <column name="scope" phpName="Scope" type="VARCHAR" size="2000"/>
+  </table>
+  <table name="oauth_scopes" idMethod="native" phpName="Scopes">
+      <column name="scope" phpName="Scope" type="CLOB"/>
+      <column name="is_default" phpName="IsDefault" type="boolean"/>
+  </table>
+  <table name="oauth_users" idMethod="native" phpName="Users">
+      <column name="username" phpName="UserName" type="VARCHAR" size="32" required="true" primaryKey="true"/>
+      <column name="password" phpName="Password" type="VARCHAR" size="2000"/>
+      <column name="first_name" phpName="FirstName" type="VARCHAR" size="255"/>
+      <column name="last_name" phpName="LastName" type="VARCHAR" size="255"/>
+  </table>
+</database>
