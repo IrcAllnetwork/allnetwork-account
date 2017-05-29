@@ -3,8 +3,8 @@ propel:
         connections:
             default:
                 adapter: mysql
-                dsn: mysql:host=localhost;port=3306;dbname=dbname
-                user: dbuser
-                password: dbpass
+                dsn: mysql:host=localhost;port=3306;dbname=allnetaccount
+                user: root
+                password: 123456
                 settings:
                     charset: utf8

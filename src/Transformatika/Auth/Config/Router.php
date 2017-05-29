@@ -7,7 +7,7 @@ return [
     ],
     [
         "path" => "/authorize-request",
-        "method" => "POST",
+        "method" => "GET|POST",
         "controller" => "Transformatika\Auth\Controller\AuthController#authorizeRequest"
     ],
     [
@@ -17,7 +17,7 @@ return [
     ],
     [
         "path" => "/resource",
-        "method" => "POST",
+        "method" => "GET",
         "controller" => "Transformatika\Auth\Controller\AuthController#resource"
     ]
 ];

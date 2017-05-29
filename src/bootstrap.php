@@ -46,7 +46,7 @@ if (Config::getConfig('env') === 'dev') {
 $sessionConfig = new StandardConfig();
 $sessionConfig->setOptions([
     'remember_me_seconds' => 1800,
-    'name'                => 'uspace',
+    'name'                => 'allnetwork',
 ]);
 
 $sessionManager = new SessionManager($sessionConfig);

@@ -59,7 +59,7 @@ class ClientsTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class ClientsTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the client_id field
@@ -102,6 +102,16 @@ class ClientsTableMap extends TableMap
     const COL_SCOPE = 'oauth_clients.scope';
 
     /**
+     * the column name for the client_name field
+     */
+    const COL_CLIENT_NAME = 'oauth_clients.client_name';
+
+    /**
+     * the column name for the client_icon field
+     */
+    const COL_CLIENT_ICON = 'oauth_clients.client_icon';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -113,11 +123,11 @@ class ClientsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('ClientId', 'ClientSecret', 'RedirectURI', 'GrantTypes', 'UserId', 'Scope', ),
-        self::TYPE_CAMELNAME     => array('clientId', 'clientSecret', 'redirectURI', 'grantTypes', 'userId', 'scope', ),
-        self::TYPE_COLNAME       => array(ClientsTableMap::COL_CLIENT_ID, ClientsTableMap::COL_CLIENT_SECRET, ClientsTableMap::COL_REDIRECT_URI, ClientsTableMap::COL_GRANT_TYPES, ClientsTableMap::COL_USER_ID, ClientsTableMap::COL_SCOPE, ),
-        self::TYPE_FIELDNAME     => array('client_id', 'client_secret', 'redirect_uri', 'grant_types', 'user_id', 'scope', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('ClientId', 'ClientSecret', 'RedirectURI', 'GrantTypes', 'UserId', 'Scope', 'Name', 'Icon', ),
+        self::TYPE_CAMELNAME     => array('clientId', 'clientSecret', 'redirectURI', 'grantTypes', 'userId', 'scope', 'name', 'icon', ),
+        self::TYPE_COLNAME       => array(ClientsTableMap::COL_CLIENT_ID, ClientsTableMap::COL_CLIENT_SECRET, ClientsTableMap::COL_REDIRECT_URI, ClientsTableMap::COL_GRANT_TYPES, ClientsTableMap::COL_USER_ID, ClientsTableMap::COL_SCOPE, ClientsTableMap::COL_CLIENT_NAME, ClientsTableMap::COL_CLIENT_ICON, ),
+        self::TYPE_FIELDNAME     => array('client_id', 'client_secret', 'redirect_uri', 'grant_types', 'user_id', 'scope', 'client_name', 'client_icon', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -127,11 +137,11 @@ class ClientsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('ClientId' => 0, 'ClientSecret' => 1, 'RedirectURI' => 2, 'GrantTypes' => 3, 'UserId' => 4, 'Scope' => 5, ),
-        self::TYPE_CAMELNAME     => array('clientId' => 0, 'clientSecret' => 1, 'redirectURI' => 2, 'grantTypes' => 3, 'userId' => 4, 'scope' => 5, ),
-        self::TYPE_COLNAME       => array(ClientsTableMap::COL_CLIENT_ID => 0, ClientsTableMap::COL_CLIENT_SECRET => 1, ClientsTableMap::COL_REDIRECT_URI => 2, ClientsTableMap::COL_GRANT_TYPES => 3, ClientsTableMap::COL_USER_ID => 4, ClientsTableMap::COL_SCOPE => 5, ),
-        self::TYPE_FIELDNAME     => array('client_id' => 0, 'client_secret' => 1, 'redirect_uri' => 2, 'grant_types' => 3, 'user_id' => 4, 'scope' => 5, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('ClientId' => 0, 'ClientSecret' => 1, 'RedirectURI' => 2, 'GrantTypes' => 3, 'UserId' => 4, 'Scope' => 5, 'Name' => 6, 'Icon' => 7, ),
+        self::TYPE_CAMELNAME     => array('clientId' => 0, 'clientSecret' => 1, 'redirectURI' => 2, 'grantTypes' => 3, 'userId' => 4, 'scope' => 5, 'name' => 6, 'icon' => 7, ),
+        self::TYPE_COLNAME       => array(ClientsTableMap::COL_CLIENT_ID => 0, ClientsTableMap::COL_CLIENT_SECRET => 1, ClientsTableMap::COL_REDIRECT_URI => 2, ClientsTableMap::COL_GRANT_TYPES => 3, ClientsTableMap::COL_USER_ID => 4, ClientsTableMap::COL_SCOPE => 5, ClientsTableMap::COL_CLIENT_NAME => 6, ClientsTableMap::COL_CLIENT_ICON => 7, ),
+        self::TYPE_FIELDNAME     => array('client_id' => 0, 'client_secret' => 1, 'redirect_uri' => 2, 'grant_types' => 3, 'user_id' => 4, 'scope' => 5, 'client_name' => 6, 'client_icon' => 7, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -157,6 +167,8 @@ class ClientsTableMap extends TableMap
         $this->addColumn('grant_types', 'GrantTypes', 'VARCHAR', false, 80, null);
         $this->addColumn('user_id', 'UserId', 'CHAR', false, 32, null);
         $this->addColumn('scope', 'Scope', 'VARCHAR', false, 2000, null);
+        $this->addColumn('client_name', 'Name', 'VARCHAR', false, 255, null);
+        $this->addColumn('client_icon', 'Icon', 'LONGVARCHAR', false, null, null);
     } // initialize()
 
     /**
@@ -313,6 +325,8 @@ class ClientsTableMap extends TableMap
             $criteria->addSelectColumn(ClientsTableMap::COL_GRANT_TYPES);
             $criteria->addSelectColumn(ClientsTableMap::COL_USER_ID);
             $criteria->addSelectColumn(ClientsTableMap::COL_SCOPE);
+            $criteria->addSelectColumn(ClientsTableMap::COL_CLIENT_NAME);
+            $criteria->addSelectColumn(ClientsTableMap::COL_CLIENT_ICON);
         } else {
             $criteria->addSelectColumn($alias . '.client_id');
             $criteria->addSelectColumn($alias . '.client_secret');
@@ -320,6 +334,8 @@ class ClientsTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.grant_types');
             $criteria->addSelectColumn($alias . '.user_id');
             $criteria->addSelectColumn($alias . '.scope');
+            $criteria->addSelectColumn($alias . '.client_name');
+            $criteria->addSelectColumn($alias . '.client_icon');
         }
     }
 

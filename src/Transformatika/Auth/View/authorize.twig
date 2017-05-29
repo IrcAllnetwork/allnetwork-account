@@ -2,13 +2,13 @@
 <div class="ui three column stackable grid container" style="margin-top:40px;">
     <div class="column"></div>
     <div class="column">
-        <form class="ui form" action="/authorize-request?client_id={{records.client_id}}&response_type=code&state=authorize&ref={{refPath}}" method="POST">
+        <form class="ui form" action="/authorize-request?client_id={{records.client_id}}&response_type=code&state={{records.state}}&ref={{refPath}}" method="POST">
             <div style="text-align:center;">
+                <img src="{{client.Icon}}" class="ui small image" style="margin:0 auto;"/>
                 <h2 class="ui header">
-                    AllNetwork Web
-                    <div class="sub header">ID: {{records.client_id}}</div>
+                    {{client.Name}}
                 </h2>
-                <p>Requested permission to access your profile</p>
+                <p>Requested permission to access your <strong>{{client.Scope}}</strong> data</p>
                 <input type="hidden" name="hash" value="{{hash}}"/>
                 <input type="hidden" name="authorize" value="y"/>
                 <button class="ui primary button">Authorize App</button>

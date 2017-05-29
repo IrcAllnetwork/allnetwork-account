@@ -102,6 +102,20 @@ abstract class Clients implements ActiveRecordInterface
     protected $scope;
 
     /**
+     * The value for the client_name field.
+     *
+     * @var        string
+     */
+    protected $client_name;
+
+    /**
+     * The value for the client_icon field.
+     *
+     * @var        string
+     */
+    protected $client_icon;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -395,6 +409,26 @@ abstract class Clients implements ActiveRecordInterface
     }
 
     /**
+     * Get the [client_name] column value.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->client_name;
+    }
+
+    /**
+     * Get the [client_icon] column value.
+     *
+     * @return string
+     */
+    public function getIcon()
+    {
+        return $this->client_icon;
+    }
+
+    /**
      * Set the value of [client_id] column.
      *
      * @param string $v new value
@@ -515,6 +549,46 @@ abstract class Clients implements ActiveRecordInterface
     } // setScope()
 
     /**
+     * Set the value of [client_name] column.
+     *
+     * @param string $v new value
+     * @return $this|\Propel\Table\Oauth\Clients The current object (for fluent API support)
+     */
+    public function setName($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->client_name !== $v) {
+            $this->client_name = $v;
+            $this->modifiedColumns[ClientsTableMap::COL_CLIENT_NAME] = true;
+        }
+
+        return $this;
+    } // setName()
+
+    /**
+     * Set the value of [client_icon] column.
+     *
+     * @param string $v new value
+     * @return $this|\Propel\Table\Oauth\Clients The current object (for fluent API support)
+     */
+    public function setIcon($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->client_icon !== $v) {
+            $this->client_icon = $v;
+            $this->modifiedColumns[ClientsTableMap::COL_CLIENT_ICON] = true;
+        }
+
+        return $this;
+    } // setIcon()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -567,6 +641,12 @@ abstract class Clients implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ClientsTableMap::translateFieldName('Scope', TableMap::TYPE_PHPNAME, $indexType)];
             $this->scope = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ClientsTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->client_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ClientsTableMap::translateFieldName('Icon', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->client_icon = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -575,7 +655,7 @@ abstract class Clients implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 6; // 6 = ClientsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = ClientsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Propel\\Table\\Oauth\\Clients'), 0, $e);
@@ -790,6 +870,12 @@ abstract class Clients implements ActiveRecordInterface
         if ($this->isColumnModified(ClientsTableMap::COL_SCOPE)) {
             $modifiedColumns[':p' . $index++]  = 'scope';
         }
+        if ($this->isColumnModified(ClientsTableMap::COL_CLIENT_NAME)) {
+            $modifiedColumns[':p' . $index++]  = 'client_name';
+        }
+        if ($this->isColumnModified(ClientsTableMap::COL_CLIENT_ICON)) {
+            $modifiedColumns[':p' . $index++]  = 'client_icon';
+        }
 
         $sql = sprintf(
             'INSERT INTO oauth_clients (%s) VALUES (%s)',
@@ -818,6 +904,12 @@ abstract class Clients implements ActiveRecordInterface
                         break;
                     case 'scope':
                         $stmt->bindValue($identifier, $this->scope, PDO::PARAM_STR);
+                        break;
+                    case 'client_name':
+                        $stmt->bindValue($identifier, $this->client_name, PDO::PARAM_STR);
+                        break;
+                    case 'client_icon':
+                        $stmt->bindValue($identifier, $this->client_icon, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -892,6 +984,12 @@ abstract class Clients implements ActiveRecordInterface
             case 5:
                 return $this->getScope();
                 break;
+            case 6:
+                return $this->getName();
+                break;
+            case 7:
+                return $this->getIcon();
+                break;
             default:
                 return null;
                 break;
@@ -927,6 +1025,8 @@ abstract class Clients implements ActiveRecordInterface
             $keys[3] => $this->getGrantTypes(),
             $keys[4] => $this->getUserId(),
             $keys[5] => $this->getScope(),
+            $keys[6] => $this->getName(),
+            $keys[7] => $this->getIcon(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -984,6 +1084,12 @@ abstract class Clients implements ActiveRecordInterface
             case 5:
                 $this->setScope($value);
                 break;
+            case 6:
+                $this->setName($value);
+                break;
+            case 7:
+                $this->setIcon($value);
+                break;
         } // switch()
 
         return $this;
@@ -1027,6 +1133,12 @@ abstract class Clients implements ActiveRecordInterface
         }
         if (array_key_exists($keys[5], $arr)) {
             $this->setScope($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setName($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setIcon($arr[$keys[7]]);
         }
     }
 
@@ -1086,6 +1198,12 @@ abstract class Clients implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ClientsTableMap::COL_SCOPE)) {
             $criteria->add(ClientsTableMap::COL_SCOPE, $this->scope);
+        }
+        if ($this->isColumnModified(ClientsTableMap::COL_CLIENT_NAME)) {
+            $criteria->add(ClientsTableMap::COL_CLIENT_NAME, $this->client_name);
+        }
+        if ($this->isColumnModified(ClientsTableMap::COL_CLIENT_ICON)) {
+            $criteria->add(ClientsTableMap::COL_CLIENT_ICON, $this->client_icon);
         }
 
         return $criteria;
@@ -1179,6 +1297,8 @@ abstract class Clients implements ActiveRecordInterface
         $copyObj->setGrantTypes($this->getGrantTypes());
         $copyObj->setUserId($this->getUserId());
         $copyObj->setScope($this->getScope());
+        $copyObj->setName($this->getName());
+        $copyObj->setIcon($this->getIcon());
         if ($makeNew) {
             $copyObj->setNew(true);
         }
@@ -1219,6 +1339,8 @@ abstract class Clients implements ActiveRecordInterface
         $this->grant_types = null;
         $this->user_id = null;
         $this->scope = null;
+        $this->client_name = null;
+        $this->client_icon = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

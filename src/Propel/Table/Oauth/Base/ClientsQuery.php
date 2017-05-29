@@ -25,6 +25,8 @@ use Propel\Table\Oauth\Map\ClientsTableMap;
  * @method     ChildClientsQuery orderByGrantTypes($order = Criteria::ASC) Order by the grant_types column
  * @method     ChildClientsQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
  * @method     ChildClientsQuery orderByScope($order = Criteria::ASC) Order by the scope column
+ * @method     ChildClientsQuery orderByName($order = Criteria::ASC) Order by the client_name column
+ * @method     ChildClientsQuery orderByIcon($order = Criteria::ASC) Order by the client_icon column
  *
  * @method     ChildClientsQuery groupByClientId() Group by the client_id column
  * @method     ChildClientsQuery groupByClientSecret() Group by the client_secret column
@@ -32,6 +34,8 @@ use Propel\Table\Oauth\Map\ClientsTableMap;
  * @method     ChildClientsQuery groupByGrantTypes() Group by the grant_types column
  * @method     ChildClientsQuery groupByUserId() Group by the user_id column
  * @method     ChildClientsQuery groupByScope() Group by the scope column
+ * @method     ChildClientsQuery groupByName() Group by the client_name column
+ * @method     ChildClientsQuery groupByIcon() Group by the client_icon column
  *
  * @method     ChildClientsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildClientsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -49,7 +53,9 @@ use Propel\Table\Oauth\Map\ClientsTableMap;
  * @method     ChildClients findOneByRedirectURI(string $redirect_uri) Return the first ChildClients filtered by the redirect_uri column
  * @method     ChildClients findOneByGrantTypes(string $grant_types) Return the first ChildClients filtered by the grant_types column
  * @method     ChildClients findOneByUserId(string $user_id) Return the first ChildClients filtered by the user_id column
- * @method     ChildClients findOneByScope(string $scope) Return the first ChildClients filtered by the scope column *
+ * @method     ChildClients findOneByScope(string $scope) Return the first ChildClients filtered by the scope column
+ * @method     ChildClients findOneByName(string $client_name) Return the first ChildClients filtered by the client_name column
+ * @method     ChildClients findOneByIcon(string $client_icon) Return the first ChildClients filtered by the client_icon column *
 
  * @method     ChildClients requirePk($key, ConnectionInterface $con = null) Return the ChildClients by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildClients requireOne(ConnectionInterface $con = null) Return the first ChildClients matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -60,6 +66,8 @@ use Propel\Table\Oauth\Map\ClientsTableMap;
  * @method     ChildClients requireOneByGrantTypes(string $grant_types) Return the first ChildClients filtered by the grant_types column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildClients requireOneByUserId(string $user_id) Return the first ChildClients filtered by the user_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildClients requireOneByScope(string $scope) Return the first ChildClients filtered by the scope column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildClients requireOneByName(string $client_name) Return the first ChildClients filtered by the client_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildClients requireOneByIcon(string $client_icon) Return the first ChildClients filtered by the client_icon column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildClients[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildClients objects based on current ModelCriteria
  * @method     ChildClients[]|ObjectCollection findByClientId(string $client_id) Return ChildClients objects filtered by the client_id column
@@ -68,6 +76,8 @@ use Propel\Table\Oauth\Map\ClientsTableMap;
  * @method     ChildClients[]|ObjectCollection findByGrantTypes(string $grant_types) Return ChildClients objects filtered by the grant_types column
  * @method     ChildClients[]|ObjectCollection findByUserId(string $user_id) Return ChildClients objects filtered by the user_id column
  * @method     ChildClients[]|ObjectCollection findByScope(string $scope) Return ChildClients objects filtered by the scope column
+ * @method     ChildClients[]|ObjectCollection findByName(string $client_name) Return ChildClients objects filtered by the client_name column
+ * @method     ChildClients[]|ObjectCollection findByIcon(string $client_icon) Return ChildClients objects filtered by the client_icon column
  * @method     ChildClients[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -166,7 +176,7 @@ abstract class ClientsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT client_id, client_secret, redirect_uri, grant_types, user_id, scope FROM oauth_clients WHERE client_id = :p0';
+        $sql = 'SELECT client_id, client_secret, redirect_uri, grant_types, user_id, scope, client_name, client_icon FROM oauth_clients WHERE client_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_STR);
@@ -404,6 +414,56 @@ abstract class ClientsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ClientsTableMap::COL_SCOPE, $scope, $comparison);
+    }
+
+    /**
+     * Filter the query on the client_name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByName('fooValue');   // WHERE client_name = 'fooValue'
+     * $query->filterByName('%fooValue%', Criteria::LIKE); // WHERE client_name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $name The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildClientsQuery The current query, for fluid interface
+     */
+    public function filterByName($name = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($name)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ClientsTableMap::COL_CLIENT_NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the client_icon column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIcon('fooValue');   // WHERE client_icon = 'fooValue'
+     * $query->filterByIcon('%fooValue%', Criteria::LIKE); // WHERE client_icon LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $icon The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildClientsQuery The current query, for fluid interface
+     */
+    public function filterByIcon($icon = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($icon)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ClientsTableMap::COL_CLIENT_ICON, $icon, $comparison);
     }
 
     /**

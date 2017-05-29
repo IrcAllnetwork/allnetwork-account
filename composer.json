@@ -32,6 +32,7 @@
         "zendframework/zend-crypt": "^3.0",
         "zendframework/zend-session": "^2.7",
         "zendframework/zend-http": "^2.5",
-        "phpxmlrpc/phpxmlrpc": "4.0"
+        "phpxmlrpc/phpxmlrpc": "4.0",
+        "bshaffer/oauth2-server-php": "~1.8"
     }
 }

@@ -20,7 +20,7 @@ class Server
         $server->addGrantType(new \OAuth2\GrantType\AuthorizationCode($storage));
 
         $server->addGrantType(new \OAuth2\GrantType\RefreshToken($storage, array(
-            'always_issue_new_refresh_token' => true
+            'always_issue_new_refresh_token' => false
         )));
 
         $defaultScope = 'basic';
