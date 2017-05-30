@@ -120,8 +120,9 @@
                                     message: res.error
                                 });
                             } else {
-                                if (document.referrer !== '' && res.records.ref !== '') {
-                                    window.location.href = decodeURIComponent(res.records.ref)+'&refPath='+res.records.refPath;
+                                if (res.records.ref !== '') {
+                                    window.location.href = decodeURIComponent(res.records.ref);
+                                    //window.location.href = document.referrer;
                                 } else {
                                     window.location.href = BASE_URL+'/my-account';
                                 }
